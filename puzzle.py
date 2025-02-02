@@ -98,4 +98,3 @@ goalState = [[1, 2, 3],
 class Node:
     def __init__(self, state):
         self.state = state
-print('test')

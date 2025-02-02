@@ -34,7 +34,7 @@ def select_algo(puzzle):
     if algorithm == 1:
         uniform_cost_search(puzzle)
     if algorithm == 2:
-        misplaced_tile_search(puzzle)
+        misplaced_tile(puzzle)
     if algorithm == 3:
         manhattan_heuristic(puzzle)
 
@@ -107,11 +107,6 @@ class Puzzle:
         return self.cost < other.cost
 
 
-#to move the blank space around the puzzle
-#up
-#down
-#left 
-#right
 def goal_pos(goalState, state): 
     for i in range(3):
         for j in range (3):
@@ -126,12 +121,30 @@ def manhattan_heuristic(state):
             if state[i][j] != 0:
                 goal_row, goal_column = goal_pos(goalState, state[i][j])
                 distance += abs(i - goal_row) + abs(j - goal_column)
-    print('Manhatten: ' + str(distance))
+    print('Manhatten: ' + str(distance)) #testing
     return distance
-main()
-#def a_star_search(puzzle):
-    
+
+def misplaced_tile(state):
+    count = 0
+    for i in range(3):
+        for j in range(3):
+            if state[i][j] != 0:
+                if(goalState[i][j] != state[i][j]):
+                    count += 1
+    print('misplaced tiles: ' + str(count))
+    return count
+
+
+#provides no heuristic for the search to work with 
+def uniform_cost_search(puzzle):
+    return 0
+
+#def a_star_search(puzzle):  
 #need to evaluate which state is the most promising 
 #f = cost + estimated cost 
 
-#def uniform_cost_search(puzzle):
+#to move the blank space around the puzzle
+#up
+#down
+#left 
+#right

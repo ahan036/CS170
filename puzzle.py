@@ -44,7 +44,6 @@ def a_star_search(state, heuristic):
     max_queue_size = 0
     #need to use tuple in a list 
     repeated_states.add(tuple(map(tuple, starting_node.state)))
-
     while len(working_queue) > 0: 
         max_queue_size = max(len(working_queue), max_queue_size)
         node_from_queue = min_heap.heappop(working_queue)
@@ -54,6 +53,8 @@ def a_star_search(state, heuristic):
             print('Solution depth: ', node_from_queue.depth)
             return node_from_queue
         num_nodes_expanded +=1
+        print("The best state to expand with a g(n) = " + str(node_from_queue.depth) + " and h(n) = " + str(node_from_queue.cost) +" is...")
+        print_puzzle(node_from_queue.state)
         for child in expand(node_from_queue):
             child = tuple(map(tuple, child))
             if child not in repeated_states:
@@ -218,7 +219,7 @@ main()
 #left 
 #right
 #Sources:
-# https://www.geeksforgeeks.org/8-puzzle-problem-in-ai/  heuristics references 
+#https://www.geeksforgeeks.org/8-puzzle-problem-in-ai/  heuristics references 
 #https://www.geeksforgeeks.org/check-instance-8-puzzle-solvable/ example states 
 #https://blog.goodaudience.com/solving-8-puzzle-using-a-algorithm-7b509c331288 reference for search algorithm
 #https://www.geeksforgeeks.org/differences-and-applications-of-list-tuple-set-and-dictionary-in-python/ tuples vs list in a set 

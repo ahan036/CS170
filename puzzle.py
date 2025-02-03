@@ -156,16 +156,22 @@ def expand(state):
             if state == 0:
                 zero_row = i
                 zero_col = j
-#decide where we want to move in relation to the zero position
-    moves = []
-    if zero_row > 0: #move up a row
-        moves.append((-1, 0))
-    if zero_row < 2: #move down a row
-        moves.append((1,0))
-    if zero_col > 0: #move to the left 
-        moves.append((0,-1))
-    if zero_col < 2: #move to the right
-        moves.append((0,1))
+#check each possible move, up, down, left, right 
+#then we need to change the puzzle to move for viable option -> this becomes the children  
+#then we run the heuristic on the children to see which is best 
+# we repeat this until goal state = state 
+    children = []
+    if zero_row > 0: #move down
+        children.append(state[i-1][j])
+
+    if zero_row < 2: #move up 
+        children.append(state[i+1][j])
+
+    if zero_col > 0: #move left
+        children.append(state[i][j-1]) 
+
+    if zero_col < 2: #move right
+        children.append(state[i][j+1]) 
 
     
 

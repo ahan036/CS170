@@ -1,4 +1,5 @@
 import heapq as min_heap
+import copy
 
 def main():
     puzzle_mode = input("Welcome to Ashley's puzzle solver. Type '1' to use a default puzzle, or '2' to create your own \n")
@@ -153,27 +154,28 @@ def expand(state):
     zero_row, zero_col = 0
     for i in range(3):
         for j in range (3):
-            if state == 0:
+            if state[i][j] == 0:
                 zero_row = i
                 zero_col = j
 #check each possible move, up, down, left, right 
 #then we need to change the puzzle to move for viable option -> this becomes the children  
 #then we run the heuristic on the children to see which is best 
 # we repeat this until goal state = state 
-    children = []
     if zero_row > 0: #move down
-        children.append(state[i-1][j])
-
+        move(state, zero_row - 1, zero_col, zero_row, zero_col)
     if zero_row < 2: #move up 
-        children.append(state[i+1][j])
-
+        move(state, zero_row + 1, zero_col, zero_row, zero_col)
     if zero_col > 0: #move left
-        children.append(state[i][j-1]) 
-
+        move(state, zero_row, zero_col - 1, zero_row, zero_col)
     if zero_col < 2: #move right
-        children.append(state[i][j+1]) 
+        move(state, zero_row, zero_col + 1, zero_row, zero_col)
 
-    
+#create a copy of existing state and swap the values
+def move(state, new_row, new_col, old_row, old_col):
+    child = copy.deepcopy(state)
+    child[old_row][old_col] = child[new_row][new_col]
+    child[new_row][new_col] = 0
+
 
 
 
@@ -214,3 +216,7 @@ def a_star_search(state, heuristic):
 #down
 #left 
 #right
+#Sources:
+# https://www.geeksforgeeks.org/8-puzzle-problem-in-ai/  heuristics references 
+#https://www.geeksforgeeks.org/check-instance-8-puzzle-solvable/ example states 
+#https://blog.goodaudience.com/solving-8-puzzle-using-a-algorithm-7b509c331288 reference for search algorithm

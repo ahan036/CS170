@@ -34,9 +34,11 @@ def select_algo(puzzle):
     if algorithm == 1:
         uniform_cost_search(puzzle)
     if algorithm == 2:
-        misplaced_tile(puzzle)
+        #change this when we implement search
+        heuristic = misplaced_tile(puzzle)
     if algorithm == 3:
-        manhattan_heuristic(puzzle)
+        #change this when we implement search
+        heuristic = manhattan_heuristic(puzzle)
 
 def default_puzzles():
     difficulty = input(
@@ -71,15 +73,19 @@ def print_puzzle(puzzle):
 trivial = [[1, 2, 3],
 [4, 5, 6],
 [7, 8, 0]]
+
 veryEasy = [[1, 2, 3],
 [4, 5, 6],
 [7, 0, 8]]
+
 easy = [[1, 2, 0],
 [4, 5, 3],
 [7, 8, 6]]
+
 medium = [[0, 1, 2],
 [4, 5, 3],
 [7, 8, 6]]
+
 hard = [[8, 7, 1],
 [6, 0, 2],
 [5, 4, 3]]
@@ -95,18 +101,6 @@ goalState = [[1, 2, 3],
              [4, 5, 6], 
              [7, 8, 0]]
 
-# class to define each puzzle state 
-class Puzzle:
-    def __init__(self, state, parent = None, depth = 0, cost = 0):
-        self.state = state
-        self.parent = parent 
-        self.depth = depth
-        self.cost = cost
-
-    def __lt__(self, other):
-        return self.cost < other.cost
-
-
 def goal_pos(goalState, state): 
     for i in range(3):
         for j in range (3):
@@ -114,7 +108,7 @@ def goal_pos(goalState, state):
                 return i, j
 
 def manhattan_heuristic(state):
-    #check the current state and see how far the blank is from the goal 
+    #check the current state and see how far each value is from the goal 
     distance = 0
     for i in range(3):
         for j in range(3):
@@ -125,6 +119,7 @@ def manhattan_heuristic(state):
     return distance
 
 def misplaced_tile(state):
+    #count which tiles are not in its goal state
     count = 0
     for i in range(3):
         for j in range(3):
@@ -134,14 +129,56 @@ def misplaced_tile(state):
     print('misplaced tiles: ' + str(count))
     return count
 
-
 #provides no heuristic for the search to work with 
 def uniform_cost_search(puzzle):
     return 0
 
-#def a_star_search(puzzle):  
+# class to define each puzzle state 
+class Puzzle:
+    def __init__(self, state, parent = None, depth = 0, cost = 0):
+        self.state = state
+        self.parent = parent 
+        self.depth = depth
+        self.cost = cost
+
+    def __lt__(self, other):
+        return self.cost < other.cost
+    #to help track duplicate states 
+    def __eq__(self, other):
+        return self.state == other.state
+
+#find the possible children and choose one
+#def expand(state, heuristic):
+
+
+def a_star_search(state, heuristic):  
 #need to evaluate which state is the most promising 
 #f = cost + estimated cost 
+    starting_node = Puzzle(state, cost = heuristic(state))
+    working_queue = []
+    repeated_states = dict()
+    heapq.heappush(working_queue, starting_node)
+    num_nodes_expaned = 0
+    max_queue_size = 0
+    repeated_states[starting_node]
+
+    while len(working_queue) > 0: 
+        max_queue_size = max(len(working_queue), max_queue_size)
+        node_from_queue = heapq.heappop(working_queue)
+        state_key = tuple(map(tuple, node_from_queue.state))
+        if state_key in repeated_states:
+            continue
+        repeated_states[state_key] = True
+        if node_from_queue.state == goalState: 
+            while len(stack_to_print) > 0:
+                print_puzzle(stack_to_print.pop())
+            print("Number of nodes expanded: ", num_nodes_expanded)
+            print("Max queue size: ", max_queue_size)
+            return node_from_queue
+        stack_to_print.append(node_from_queue.puzzle)
+
+
+
 
 #to move the blank space around the puzzle
 #up

@@ -7,7 +7,7 @@ def main():
         #select algo chooses between: uniform, misplaced, manhattan
         #default puzzles are the different difficulty of puzzles
         puzzle = default_puzzles()
-        heuristic = input("Select algorithm. (1) uniform cost search (2) A* Misplaced Tile Heuristic (3) A* Manhattan Distance Heuristic")
+        heuristic = input("Select algorithm. (1) uniform cost search (2) A* Misplaced Tile Heuristic (3) A* Manhattan Distance Heuristic \n")
         a_star_search(puzzle, heuristic)
 
     if puzzle_mode == '2':
@@ -25,8 +25,11 @@ def main():
             puzzle_row_two[i] = int(puzzle_row_two[i])
             puzzle_row_three[i] = int(puzzle_row_three[i])
 
-        user_puzzle = [puzzle_row_one, puzzle_row_two, puzzle_row_three]
-        #select_algo(user_puzzle)
+        user_puzzle = (puzzle_row_one, puzzle_row_two, puzzle_row_three)
+        user_puzzle = tuple(map(tuple, user_puzzle))
+        print(user_puzzle)
+        heuristic = input("Select algorithm. (1) uniform cost search (2) A* Misplaced Tile Heuristic (3) A* Manhattan Distance Heuristic \n")
+        a_star_search(user_puzzle, heuristic)
     return
 
 def a_star_search(state, heuristic):  
@@ -39,6 +42,7 @@ def a_star_search(state, heuristic):
     min_heap.heappush(working_queue, starting_node)
     num_nodes_expanded = 0
     max_queue_size = 0
+    #need to use tuple in a list 
     repeated_states.add(tuple(map(tuple, starting_node.state)))
 
     while len(working_queue) > 0: 
@@ -47,6 +51,7 @@ def a_star_search(state, heuristic):
         if node_from_queue.state == goalState: 
             print("Number of nodes expanded: ", num_nodes_expanded)
             print("Max queue size: ", max_queue_size)
+            print('Solution depth: ', node_from_queue.depth)
             return node_from_queue
         num_nodes_expanded +=1
         for child in expand(node_from_queue):
@@ -58,15 +63,13 @@ def a_star_search(state, heuristic):
                 child_puzzle.cost = child_puzzle.depth + select_algo(child_puzzle.state, heuristic)
                 min_heap.heappush(working_queue, child_puzzle)
 
-#this menu needs to be changed 
+#pretty sure this is useless for my program 
 def select_algo(puzzle, algorithm):
     if algorithm == '1':
         return uniform_cost_search(puzzle)
     if algorithm == '2':
-        #change this when we implement search
         return misplaced_tile(puzzle)
     if algorithm == '3':
-        #change this when we implement search
         return manhattan_heuristic(puzzle)
 
 def default_puzzles():
@@ -218,3 +221,4 @@ main()
 # https://www.geeksforgeeks.org/8-puzzle-problem-in-ai/  heuristics references 
 #https://www.geeksforgeeks.org/check-instance-8-puzzle-solvable/ example states 
 #https://blog.goodaudience.com/solving-8-puzzle-using-a-algorithm-7b509c331288 reference for search algorithm
+#https://www.geeksforgeeks.org/differences-and-applications-of-list-tuple-set-and-dictionary-in-python/ tuples vs list in a set 

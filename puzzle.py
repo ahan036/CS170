@@ -1,4 +1,4 @@
-import heapq as min_heap_esque_queue
+import heapq as min_heap
 
 def main():
     puzzle_mode = input("Welcome to Ashley's puzzle solver. Type '1' to use a default puzzle, or '2' to create your own \n")
@@ -148,7 +148,27 @@ class Puzzle:
         return self.state == other.state
 
 #find the possible children and choose one
-#def expand(state, heuristic):
+def expand(state):
+#find where the zero is first 
+    zero_row, zero_col = 0
+    for i in range(3):
+        for j in range (3):
+            if state == 0:
+                zero_row = i
+                zero_col = j
+#decide where we want to move in relation to the zero position
+    moves = []
+    if zero_row > 0: #move up a row
+        moves.append((-1, 0))
+    if zero_row < 2: #move down a row
+        moves.append((1,0))
+    if zero_col > 0: #move to the left 
+        moves.append((0,-1))
+    if zero_col < 2: #move to the right
+        moves.append((0,1))
+
+    
+
 
 
 def a_star_search(state, heuristic):  
@@ -157,25 +177,28 @@ def a_star_search(state, heuristic):
     starting_node = Puzzle(state, cost = heuristic(state))
     working_queue = []
     repeated_states = dict()
-    heapq.heappush(working_queue, starting_node)
+    min_heap.heappush(working_queue, starting_node)
     num_nodes_expaned = 0
     max_queue_size = 0
     repeated_states[starting_node]
 
     while len(working_queue) > 0: 
         max_queue_size = max(len(working_queue), max_queue_size)
-        node_from_queue = heapq.heappop(working_queue)
+        node_from_queue = min_heap.heappop(working_queue)
         state_key = tuple(map(tuple, node_from_queue.state))
         if state_key in repeated_states:
             continue
         repeated_states[state_key] = True
+
         if node_from_queue.state == goalState: 
-            while len(stack_to_print) > 0:
-                print_puzzle(stack_to_print.pop())
             print("Number of nodes expanded: ", num_nodes_expanded)
             print("Max queue size: ", max_queue_size)
             return node_from_queue
-        stack_to_print.append(node_from_queue.puzzle)
+        
+        num_nodes_expanded +=1
+        for child in expand(node_from_queue):
+            child.cost = child.depth + heuristic(child.state)
+            min_heap.heappush(working_queue, child)
 
 
 
